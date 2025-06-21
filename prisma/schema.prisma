@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String             @id @default(uuid())
+  age                     Int
+  role                    Role               @default(student)
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+  email                   String             @unique
+  image                   String?
+  password                String
+  firstname               String
+  lastname                String
+  username                String             @unique
+  encodedimagedata        String? //Float[]
+  isVerified              Boolean            @default(false)
+  verificationCode        String             @unique @default(uuid())
+  verificationCodeExpiers DateTime
+  licenseplate            String?            @unique
+  enrolledCourses         CourseEnrollment[]
+  profile                 profile?
+  tokens                  Token[]
+
+  @@index([id])
+}
+
+model Token {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+model courses {
+  id          String             @id @default(uuid())
+  name        String             @unique
+  category    String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  enrollments CourseEnrollment[]
+  lectures    lecture[]
+}
+
+model CourseEnrollment {
+  id       String   @id @default(uuid())
+  userId   String
+  courseId String
+  role     Role
+  joinedAt DateTime @default(now())
+  course   courses  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model profile {
+  id           String  @id @default(uuid())
+  bio          String?
+  emailupdates Boolean @default(false)
+  userId       String  @unique
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model lecture {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    courses  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  admin
+  student
+  doctor
+  assistant
+}
+
+model attendance {
+  id       String @id @default(uuid())
+  name     String
+  courseid String
+}
+
+model Hall{
+    id String @id @default(uuid())
+    name String @unique
+    Camera Camera[]
+}
+
+model Camera{
+  id String @id @default(uuid())
+  hallname String
+  username String
+  password String
+  camera_ip String
+  Hall      Hall     @relation(fields: [hallname], references: [name], onDelete: Cascade)
+}
+
+model TrashCan {
+  id          String   @id @default(uuid())
+  location    String
+  level       Int      @default(0)
+  lastEmptied DateTime @default(now())
+}
+// `rtsp://${cam.username}:${cam.password}@${cam.camera_ip}:554/stream1`

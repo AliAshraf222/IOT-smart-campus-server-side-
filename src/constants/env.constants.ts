@@ -1,0 +1,13 @@
+export const NODE_ENV = "NODE_ENV";
+export const PORT = "PORT";
+export const EMAIL_HOST = "EMAIL_HOST";
+export const EMAIL_PORT = "EMAIL_PORT";
+export const EMAIL_USER = "EMAIL_USER";
+export const EMAIL_PASS = "EMAIL_PASS";
+export const EMAIL_SECURE = "EMAIL_SECURE";
+export const VERIFICATION_TOKEN_EXPIRES = "VERIFICATION_TOKEN_EXPIRES";
+export const DATABASE_URL = "DATABASE_URL";
+export const ACCESS_TOKEN_SECRET = "ACCESS_TOKEN_SECRET";
+export const Refresh_TOKEN_SECRET = "Refresh_TOKEN_SECRET";
+export const ACCESS_TOKEN_EXPIRES = "ACCESS_TOKEN_EXPIRES";
+export const REFRESH_TOKEN_EXPIRES = "REFRESH_TOKEN_EXPIRES";

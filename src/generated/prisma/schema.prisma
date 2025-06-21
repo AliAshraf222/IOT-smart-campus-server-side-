@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String             @id @default(uuid())
+  age                     Int
+  role                    Role               @default(student)
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+  email                   String             @unique
+  image                   String?
+  password                String
+  firstname               String
+  lastname                String
+  username                String             @unique
+  encodedimagedata        Float[]
+  isVerified              Boolean            @default(false)
+  verificationCode        String             @default(uuid())
+  verificationCodeExpiers DateTime
+  enrolledCourses         CourseEnrollment[]
+  profile                 profile?
+
+  @@index([id])
+}
+
+model courses {
+  id          String             @id @default(uuid())
+  name        String             @unique
+  category    String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  enrollments CourseEnrollment[]
+  lectures    lecture[]
+}
+
+model CourseEnrollment {
+  id       String   @id @default(uuid())
+  userId   String
+  courseId String
+  role     Role
+  joinedAt DateTime @default(now())
+  course   courses  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model profile {
+  id           String  @id @default(uuid())
+  bio          String?
+  emailupdates Boolean @default(false)
+  userId       String  @unique
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model lecture {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    courses  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  admin
+  student
+  doctor
+  assistant
+}
