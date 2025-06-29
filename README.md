@@ -1,4 +1,4 @@
-# IOT Smart Campus Project
+# IOT Smart Campus Server Side
 
 This is a robust backend service built with Node.js, Express, and TypeScript with MVCS architecture.
 It provides a comprehensive set of features including user authentication, database management with Prisma, file uploads, and integration with Python scripts. This project is designed to be a scalable and secure foundation for a modern web application
